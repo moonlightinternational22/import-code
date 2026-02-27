@@ -1,0 +1,62 @@
+Imports System.Configuration
+Imports System.Data.SqlClient
+Imports System.Drawing.Drawing2D ' Required for drawing rounded corners
+
+Public Class SIS_MAIN
+
+    ' --------------------------------------------------
+    ' Helper Method: Applies rounded corners to controls
+    ' --------------------------------------------------
+    Private Sub MakeRounded(ByVal ctrl As Control, ByVal radius As Integer)
+        Dim path As New GraphicsPath()
+        path.StartFigure()
+
+        ' Draw the four corners
+        path.AddArc(New Rectangle(0, 0, radius, radius), 180, 90) ' Top Left
+        path.AddArc(New Rectangle(ctrl.Width - radius, 0, radius, radius), -90, 90) ' Top Right
+        path.AddArc(New Rectangle(ctrl.Width - radius, ctrl.Height - radius, radius, radius), 0, 90) ' Bottom Right
+        path.AddArc(New Rectangle(0, ctrl.Height - radius, radius, radius), 90, 90) ' Bottom Left
+
+        path.CloseFigure()
+
+        ' Apply the shape to the control
+        ctrl.Region = New Region(path)
+    End Sub
+
+    ' --------------------------------------------------
+    ' Form Load
+    ' --------------------------------------------------
+    Private Sub SIS_MAIN_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        ' Set Fonts
+        headText.Font = New Font("Century Gothic", 25, FontStyle.Bold)
+        btnAdmin.Font = New Font("Century Gothic", 15, FontStyle.Bold)
+        btnClose.Font = New Font("Century Gothic", 15, FontStyle.Bold)
+        btnShow.Font = New Font("Century Gothic", 15, FontStyle.Bold)
+
+        ' Apply rounded corners
+        ' You can change '20' to a higher number for rounder corners, or lower for sharper ones.
+        MakeRounded(btnAdmin, 40)
+        MakeRounded(btnClose, 40)
+        MakeRounded(btnShow, 40)
+    End Sub
+
+    ' --------------------------------------------------
+    ' Button Clicks
+    ' --------------------------------------------------
+    Private Sub btnClose_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnClose.Click
+        Application.Exit()
+    End Sub
+
+    Private Sub btnAdmin_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnAdmin.Click
+        Dim sisAdmin As New SIS_ADMIN()
+        sisAdmin.Show()
+        Me.Hide()
+    End Sub
+
+    Private Sub btnShow_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnShow.Click
+        Dim showCreds As New Creditables()
+        showCreds.Show()
+    End Sub
+
+End Class
+
